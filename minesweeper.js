@@ -1,20 +1,6 @@
 document.addEventListener('DOMContentLoaded', startGame)
 
-// Define your `board` object here!
-// var board = {
-//   'cells': [
-//     {row: 0, col: 0, isMine: true, hidden: true}, 
-//     {row: 0, col: 1, isMine: false, hidden: true}, 
-//     {row: 0, col: 2, isMine: false, hidden: true}, 
-//     {row: 1, col: 0, isMine: false, hidden: true}, 
-//     {row: 1, col: 1, isMine: false, hidden: true},
-//     {row: 1, col: 2, isMine: false, hidden: true},
-//     {row: 2, col: 0, isMine: true, hidden: true}, 
-//     {row: 2, col: 1, isMine: false, hidden: true},
-//     {row: 2, col: 2, isMine: false, hidden: true}
-//   ]
-// };
-// make a function that allows you to pass a number of rows and a number of columns as variables.
+// function to generate the board.
 function generateBoard (size) {
   let board = new Object();
   board.cells = [];
@@ -34,8 +20,19 @@ function generateBoard (size) {
 // generate board
 let board = generateBoard(3);
 
+// start the game by counting nearby mines and setting event listeners
+function startGame () {
+  // Don't remove this function call: it makes the game work!
+  for (let i = 0; i < board['cells'].length; i++) {
+    board.cells[i].surroundingMines = countSurroundingMines(i);
+  }
+  document.addEventListener('click', checkForWin);
+  document.addEventListener('contextmenu', checkForWin);
+  lib.initBoard();
+}
 
-// how to assign mines randomly.
+
+// Assign mines randomly.
 function assignMines (board, size){
   // for every 4 cells, add a mine, rounded up or down based on decimal.
   let expectedMines = Math.round((size * size) / 4);
@@ -53,17 +50,9 @@ function assignMines (board, size){
   }
 }
 
-function startGame () {
-  // Don't remove this function call: it makes the game work!
-  for (let i = 0; i < board['cells'].length; i++) {
-    board.cells[i].surroundingMines = countSurroundingMines(i);
-  }
-  document.addEventListener('click', checkForWin);
-  document.addEventListener('contextmenu', checkForWin);
-  lib.initBoard();
-}
 
-// Define this function to look for a win condition:
+
+// Check for win condition.
 //
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
