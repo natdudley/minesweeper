@@ -1,19 +1,57 @@
 document.addEventListener('DOMContentLoaded', startGame)
 
 // Define your `board` object here!
-var board = {
-  'cells': [
-    {row: 0, col: 0, isMine: true, hidden: true}, 
-    {row: 0, col: 1, isMine: false, hidden: true}, 
-    {row: 0, col: 2, isMine: false, hidden: true}, 
-    {row: 1, col: 0, isMine: false, hidden: true}, 
-    {row: 1, col: 1, isMine: false, hidden: true},
-    {row: 1, col: 2, isMine: false, hidden: true},
-    {row: 2, col: 0, isMine: true, hidden: true}, 
-    {row: 2, col: 1, isMine: false, hidden: true},
-    {row: 2, col: 2, isMine: false, hidden: true}
-  ]
-};
+// var board = {
+//   'cells': [
+//     {row: 0, col: 0, isMine: true, hidden: true}, 
+//     {row: 0, col: 1, isMine: false, hidden: true}, 
+//     {row: 0, col: 2, isMine: false, hidden: true}, 
+//     {row: 1, col: 0, isMine: false, hidden: true}, 
+//     {row: 1, col: 1, isMine: false, hidden: true},
+//     {row: 1, col: 2, isMine: false, hidden: true},
+//     {row: 2, col: 0, isMine: true, hidden: true}, 
+//     {row: 2, col: 1, isMine: false, hidden: true},
+//     {row: 2, col: 2, isMine: false, hidden: true}
+//   ]
+// };
+// make a function that allows you to pass a number of rows and a number of columns as variables.
+function generateBoard (size) {
+  let board = new Object();
+  board.cells = [];
+  let arrayNum = 0;
+  // loop through row numbers
+  for (let i = 0; i < size; i++) {
+    // loop through column numbers for each row
+    for (let j = 0; j < size; j++) {
+      // create a cell for each row/column combo. This cell should have a hidden: true and isMine: true.
+      board.cells[arrayNum] = {row: i, col: j, isMine: false, hidden: true};
+      arrayNum++;
+    }
+  } 
+  assignMines(board, size, size);
+  return board;
+}
+// generate board
+let board = generateBoard(3);
+
+
+// how to assign mines randomly.
+function assignMines (board, size){
+  // for every 4 cells, add a mine, rounded up or down based on decimal.
+  let expectedMines = Math.round((size * size) / 4);
+  // create a loop that runs until it has assigned the number of mines calculated.
+  for (let i = 0; i < expectedMines; i++) {
+    // in each loop, randomly calculate a number between 0 and board.cells.length
+    let random = Math.floor(Math.random() * board.cells.length);
+    if (!board.cells[random].isMine) {
+      board.cells[random].isMine = true;
+    } 
+    else {
+      // remove an iteration count if isMine was already true.
+      i--;
+    } 
+  }
+}
 
 function startGame () {
   // Don't remove this function call: it makes the game work!
@@ -52,7 +90,6 @@ function checkForWin () {
 // It will return cell objects in an array. You should loop through 
 // them, counting the number of times `cell.isMine` is true.
 function countSurroundingMines (cell) {
-  // console.log(board.cells[cell].row);
   // set surrounding to be an array of the surrounding cell values
   let surrounding = lib.getSurroundingCells(board.cells[cell].row, board.cells[cell].col);
   let count = 0;
