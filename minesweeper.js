@@ -14,7 +14,7 @@ function generateBoard (size) {
       arrayNum++;
     }
   } 
-  assignMines(board, size, size);
+  assignMines(board, size);
   return board;
 }
 // generate board
